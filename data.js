@@ -12,6 +12,18 @@
 // "sequential-or-arcade" mode the primary source doesn't contain, this build ships the three
 // modes the source actually documents, which already clears the charter's "at minimum 2 of 3"
 // bar with real data instead of a guess.
+//
+// 2026-10-20 pass (Stripe-unlock follow-up charter, WA-9 follow-up): added 2 more combos, each
+// tagged tier: "pro", each fetched and quoted fresh today. h_shifter_positions for the new
+// entries applies the same convention already implicit in all 4 existing rows above
+// (positions = forward_gears + 1 — one discrete reverse command, whether its physical gate is
+// dedicated or shared/locked with a forward gear, matching how g29-dfs/t300rs-gt-th8a/tmx-th8a/
+// moza-r5-hgp are already encoded) — not a new invented number, a restatement of the manufacturer's
+// own stated forward-gear count via the schema's existing rule. Also researched and dropped:
+// Simagic DS-8X Shifter (simagic.com's own product page gives no gate-position count and no
+// reverse-engagement description — only a bare headline, "Dual Shift with 8 Gears plus More" —
+// and Simagic's Q1/Q1S shifters are sequential-only, not H-pattern, so neither fits this schema
+// without guessing; dropped per the charter's own rule rather than invent a count).
 
 const CONTROLLERS = [
   {
@@ -68,6 +80,36 @@ const CONTROLLERS = [
     sources: [
       { label: "MOZA Racing — HGP Shifter product page, fetched 2026-10-15: \"seven forward and one reverse gear\"; \"Both reverse and 7th gear are locked ... require downward pressure to engage\"; connects \"directly to a PC via the included USB cable or to a wheelbase with a compatible shifter port\".", url: "https://mozaracing.com/products/hgp-shifter" },
       { label: "MOZA Racing — R5 Bundle product page, fetched 2026-10-15: bundled \"ES Steering Wheel\" with \"22\" buttons; bundled pedal set stated as \"SR-P Lite Pedals (No Clutch)\".", url: "https://mozaracing.com/products/r5-bundle" }
+    ]
+  },
+  {
+    id: "csl-dd-clubsport-sq",
+    name: "Fanatec CSL DD (5 Nm) + ClubSport Shifter SQ V1.5",
+    note: "Entry-level direct-drive wheelbase paired with Fanatec's dual-mode (H-pattern/sequential) add-on shifter. Pro-only.",
+    tier: "pro",
+    h_shifter_forward_gears: 7,
+    h_shifter_positions: 8,
+    sequential_mode_on_shifter: true,
+    clutch_axis: "no",
+    clutch_note: "The CSL DD Ready2Race Bundle's own product page states its bundled \"CSL Pedals\" are a \"Two-pedal set (throttle and brake), upgradeable to three pedals (upgrade kits sold separately)\" — a clutch pedal needs the separately-sold CSL Pedals Clutch Kit or Load Cell Kit.",
+    sources: [
+      { label: "Fanatec — ClubSport Shifter SQ V1.5 product page, fetched 2026-10-20: \"The ClubSport Shifter SQ features 7 speeds on a traditional H-Pattern, just like in a Porsche 911\"; \"Reverse gear with inhibitor to prevent accidental shifts\"; \"both the H-Pattern and sequential modes\" switchable without tools; \"Compatible to all Fanatec Wheel Bases / Racing Wheels\".", url: "https://www.fanatec.com/us/en/p/add-ons/crd-9040002-ww/clubsport-shifter-sq" },
+      { label: "Fanatec — CSL DD QR2 Ready2Race Bundle (5 Nm) product page, fetched 2026-10-20: bundle contents \"1x CSL DD (5 Nm)\", \"1x CSL Pedals\"; pedal set described as \"Two-pedal set (throttle and brake), upgradeable to three pedals (upgrade kits sold separately)\".", url: "https://fanatec.com/us-en/ready2race/csl-dd-qr2-ready2race-bundle-for-pc-5-nm" }
+    ]
+  },
+  {
+    id: "g923-dfs",
+    name: "Logitech G923 TRUEFORCE + Driving Force Shifter",
+    note: "Newer Logitech wheelbase than the free tier's G29/G920, same compatible add-on shifter. Pro-only.",
+    tier: "pro",
+    h_shifter_forward_gears: 6,
+    h_shifter_positions: 7,
+    sequential_mode_on_shifter: false,
+    clutch_axis: "no",
+    clutch_note: "The G923 TRUEFORCE product page's own pedal technical-specifications list (\"Nonlinear brake pedal\", \"Patented carpet grip system\", \"Textured heel grip\", \"Self-calibrating\") and package contents (\"Pedals\") name no clutch pedal anywhere; the page's only other use of \"clutch\" is a software \"programmable dual clutch launch assist in supported games\" via the paddle shifters, not a physical pedal.",
+    sources: [
+      { label: "Logitech G — Driving Force Shifter product page, fetched 2026-10-15 (same shifter as the free g29-dfs entry above): compatibility \"designed for the G923, G29 (for PlayStation and PC) and G920 (for Xbox and PC) racing wheels.\"", url: "https://www.logitechg.com/en-us/shop/p/driving-force-shifter" },
+      { label: "Logitech G — G923 TRUEFORCE Sim Racing Wheel product page, fetched 2026-10-20: pedal technical specifications list \"Nonlinear brake pedal\", \"Patented carpet grip system\", \"Textured heel grip\", \"Self-calibrating\"; package contents \"Steering wheel\", \"Pedals\", \"Power supply\", \"User documentation\" — no clutch pedal stated anywhere on the page.", url: "https://www.logitechg.com/en-us/shop/p/g923-trueforce-sim-racing-wheel.941-000156" }
     ]
   }
 ];

@@ -75,11 +75,91 @@ function populateSelect(select, items, nameKey) {
   });
 }
 
+const PRO_PAYMENT_LINK_URL = "https://buy.stripe.com/8x214p9iwaql0wY1uHfrW3g";
+
+function isPro(item) {
+  return item.tier === "pro";
+}
+
+function visibleControllers() {
+  return unlockedState ? CONTROLLERS : CONTROLLERS.filter(function (c) { return !isPro(c); });
+}
+
+function updateUnlockUI(unlocked) {
+  const unlockSection = document.getElementById("unlock-box");
+  const proControllers = CONTROLLERS.filter(isPro).length;
+
+  unlockSection.innerHTML = "";
+
+  if (unlocked) {
+    unlockSection.appendChild(el("p", "unlock-confirmed", "Pro unlocked — all " + CONTROLLERS.length + " wheel+shifter combos available."));
+    return;
+  }
+
+  const buyP = document.createElement("p");
+  const buyLink = el("a", "btn", "Unlock all " + CONTROLLERS.length + " combos — $9 one time");
+  buyLink.href = PRO_PAYMENT_LINK_URL;
+  buyP.appendChild(buyLink);
+  buyP.appendChild(document.createTextNode(" (adds " + proControllers + " more combos)"));
+  unlockSection.appendChild(buyP);
+
+  const form = document.createElement("form");
+  form.className = "license-form";
+  const label = el("label", null, "Already purchased? Paste your license key");
+  label.htmlFor = "license-key-input";
+  const input = document.createElement("input");
+  input.type = "text";
+  input.id = "license-key-input";
+  input.placeholder = "EW1.…";
+  const submit = document.createElement("button");
+  submit.type = "submit";
+  submit.textContent = "Activate";
+  const msg = el("p", "license-msg", "");
+  form.appendChild(label);
+  form.appendChild(input);
+  form.appendChild(submit);
+  form.appendChild(msg);
+  form.addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    verifyLicense(input.value).then(function (res) {
+      if (res.ok) {
+        storeLicense(input.value);
+        refreshTierAndRender();
+      } else {
+        msg.textContent = res.reason;
+      }
+    });
+  });
+  unlockSection.appendChild(form);
+}
+
+let unlockedState = false;
+
+function refreshTierAndRender() {
+  loadStoredLicense().then(function (license) {
+    unlockedState = !!license;
+    updateUnlockUI(unlockedState);
+
+    const controllerSelect = document.getElementById("controller-select");
+    const modeSelect = document.getElementById("mode-select");
+    const prevController = controllerSelect.value;
+
+    populateSelect(controllerSelect, visibleControllers(), "name");
+    if (modeSelect.options.length === 0) populateSelect(modeSelect, GEARBOX_MODES, "mode_name");
+
+    controllerSelect.value = visibleControllers().some(function (c) { return c.id === prevController; })
+      ? prevController : visibleControllers()[0].id;
+
+    const controller = CONTROLLERS.find(function (c) { return c.id === controllerSelect.value; });
+    const mode = GEARBOX_MODES.find(function (m) { return m.id === modeSelect.value; });
+    renderResult(controller, mode);
+  });
+}
+
 function init() {
   const controllerSelect = document.getElementById("controller-select");
   const modeSelect = document.getElementById("mode-select");
 
-  populateSelect(controllerSelect, CONTROLLERS, "name");
   populateSelect(modeSelect, GEARBOX_MODES, "mode_name");
 
   function update() {
@@ -91,7 +171,7 @@ function init() {
   controllerSelect.addEventListener("change", update);
   modeSelect.addEventListener("change", update);
 
-  update();
+  refreshTierAndRender();
 }
 
 document.addEventListener("DOMContentLoaded", init);
